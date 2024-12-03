@@ -349,9 +349,9 @@ spec:
             - name: {{ $name }}
               mountPath: {{ quote $value.mountPath }}
           {{- end }}
-          {{- range $name, $value := .Values.scratchPaths }}
-            - name: {{ $name }}
-              mountPath: {{ quote $value }}
+          {{- range .Values.scratchPaths }}
+            - name: {{ .name }}
+              mountPath: {{ quote .path }}
           {{- end }}
           {{- range $name, $value := .Values.emptyDirs }}
             - name: {{ $name }}
@@ -429,7 +429,7 @@ spec:
         - name: {{ $name }}-volume
           csi: 
             readOnly: {{ $value.readOnly }}
-            driver:  {{ $value.csi.driver }}
+            driver: {{ $value.csi.driver }}
             volumeAttributes:
               secretProviderClass: {{ $value.csi.secretProviderClass }}
 
@@ -440,10 +440,13 @@ spec:
           persistentVolumeClaim:
             claimName: {{ $value.claimName }}
     {{- end }}
-    {{- range $name, $value := .Values.scratchPaths }}
-        - name: {{ $name }}
+    {{- range .Values.scratchPaths }}
+        - name: {{ .name }}
           emptyDir:
             medium: "Memory"
+            {{- if .sizeLimit }}
+            sizeLimit: {{ .sizeLimit }}
+            {{- end }}
     {{- end }}
     {{- range $name, $value := .Values.emptyDirs }}
         - name: {{ $name }}

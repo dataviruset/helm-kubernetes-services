@@ -585,13 +585,15 @@ configMaps: {}
 #
 persistentVolumes: {}
 
-# scratchPaths is a map of key value pairs that specifies which paths in the container should be setup as scratch space.
+# scratchPaths is a map that specifies paths in the container that should be set up as scratch space.
 # Under the hood each entry in the map is converted to a tmpfs volume with the name set to the key and mounted into the
-# container on the path provided as the value.
+# container on the path provided as the value. The sizeLimit is optional and defaults to half of the node's memory.
 #
 # EXAMPLE:
 # scratchPaths:
-#   example: /mnt/scratch
+#   - name: example
+#     path: /mnt/scratch
+#     sizeLimit: 128Mi
 scratchPaths: {}
 
 # emptyDirs is a map of key value pairs that specifies which paths in the container should be setup as an emptyDir volume.
